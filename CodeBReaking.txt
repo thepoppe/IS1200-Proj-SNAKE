@@ -1,0 +1,116 @@
+
+
+
+
+void gameBorderToBuffer()
+{
+	bufferReset();
+    int i,j;
+
+    for(i = 0; i < 3 ; i++)
+    {
+        for(j = 0; j < 128; j++)
+        {   
+			if ((j==0) || (j == 127))
+                displayBuffer[i][j] |= 255;
+
+            else if (i = 0 )
+                displayBuffer[i][j] |= 1;
+        
+            else if (i = 3)
+                displayBuffer[i][j] |= (1 << 7);
+    	}
+    }
+
+    
+}
+
+// ***OBS Copied from lab 3, time4io. Some changes made to the code ***
+void buffer2oled(void) 
+{
+	int i, j;
+	
+	for(i = 0; i < 4; i++) 
+	{
+		DISPLAY_CHANGE_TO_COMMAND_MODE;
+		spi_send_recv(0x22);
+		spi_send_recv(i);
+
+		spi_send_recv(0x0);
+		spi_send_recv(0x10);
+
+		DISPLAY_CHANGE_TO_DATA_MODE;
+		for (j = 0; j < 128; j++)
+			spi_send_recv(displayBuffer[i][j]);
+	
+	}
+}
+
+void showBorder()
+{
+	gameBorderToBuffer();
+	buffer2oled();
+}
+
+
+void oledUpdate()
+{
+	bufferUpdate();
+	buffer2oled();
+}
+
+
+
+
+
+
+
+
+
+
+movement********
+    //updating the coordinates
+    int i;
+    for(i = 1 ; i < bodyParts; i--)
+    {
+        snakeX[i] = snakeX[i-1];        //bodypart = ett index bakom nästa body
+        snakeY[i] = snakeY[i-1];        //body follows head
+        snakeBit[i] = snakeBit[i-1];    
+    }
+
+
+
+
+
+
+    
+void changeDirection()
+{
+  
+    //INPUT BTN 3
+        if (PORTD & (1<<6))
+        {
+            if(direction == 'U')
+                direction = 'R';
+            if(direction == 'R')
+                direction = 'D';
+            if(direction == 'L')
+                direction = 'D';
+            if(direction == 'D')
+                direction = 'R';
+        }
+
+        //INPUT BTN 4
+        if (PORTD & (1<<7))
+
+        	if(direction == 'U')
+                direction = 'L';
+            if(direction == 'D')
+                direction = 'L';
+            if(direction == 'R')
+                direction = 'U';
+            if(direction == 'L')
+                direction = 'U';
+
+    
+}
