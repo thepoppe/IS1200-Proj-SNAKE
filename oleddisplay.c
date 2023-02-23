@@ -70,6 +70,44 @@ void displayInit(void) {
 
 
 
+// ***OBS Copied from lab 3, time4io. Some changes made to the code ***
+void oledUpdate() 
+{	
+	
+	int i, j;
+	for(i = 0; i < 4; i++) 
+	{
+		DISPLAY_CHANGE_TO_COMMAND_MODE;
+		spi_send_recv(0x22);
+		spi_send_recv(i);
+
+		spi_send_recv(0x0);
+		spi_send_recv(0x10);
+
+		DISPLAY_CHANGE_TO_DATA_MODE;
+		for (j = 0; j < 128; j++)
+			spi_send_recv(displayBuffer[i][j]);
+	
+	
+	}
+}
+
+
+
+
+// bufferReset clears the array of numbers so the screen turns black
+void bufferReset()
+{
+
+    int i,j;
+    for (i=0; i < 4; i++)
+		for(j=0; j<128; j++)
+    	  	displayBuffer[i][j]= 0;
+
+}
+
+
+
 
 
 //buffer array with all pixels. NOT USED
@@ -85,7 +123,7 @@ uint8_t displayBuffer[4][128];
 // old buffer to update one single pixel
 void pixelBufferUpdate()
 {
-	bufferReset();
+	//bufferReset();
 	//displayBuffer[pixelPosY][pixelPosX] = (1 << pixelBIT);  
 }
 
@@ -121,20 +159,6 @@ void blackDisplay()
 
 
   return;
-}
-
-
-
-
-// bufferReset clears the array of numbers so the screen turns black
-void bufferReset()
-{
-
-    int i,j;
-    for (i=0; i < 4; i++)
-		for(j=0; j<128; j++)
-    	  	displayBuffer[i][j]= 0;
-
 }
 
 
@@ -192,38 +216,5 @@ void GameBufferUpdate()
 
 
 }
-
-
-
-
-
-
-
-// ***OBS Copied from lab 3, time4io. Some changes made to the code ***
-void oledUpdate() 
-{	
-	
-	int i, j;
-	for(i = 0; i < 4; i++) 
-	{
-		DISPLAY_CHANGE_TO_COMMAND_MODE;
-		spi_send_recv(0x22);
-		spi_send_recv(i);
-
-		spi_send_recv(0x0);
-		spi_send_recv(0x10);
-
-		DISPLAY_CHANGE_TO_DATA_MODE;
-		for (j = 0; j < 128; j++)
-			spi_send_recv(displayBuffer[i][j]);
-	
-	
-	}
-}
-
-
-
-
-
 
 
