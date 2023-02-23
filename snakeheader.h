@@ -14,27 +14,24 @@ extern int snakeBit[];
 extern int appleX;
 extern int appleY;
 extern int appleB;
-
 void startGame();
 
 
-//oleddisplay
-extern uint8_t displayBuffer[4][128];
-extern uint8_t display[];
-void oledUpdate(void);
+
+// oleddisplay
 void displayInit(void);
-void bufferReset();
-void bufferUpdate();
+void GameBufferUpdate();
 void whiteDisplay();
-void showBorder();
+
+
 
 
 
 //uc32Config
 void IO_init(void);
 void user_isr();
-int randomnumber(int, int);
-int btnvalues();
+void waitAWhile(int s);
+
 
 //labwork.S
 void enableEI();

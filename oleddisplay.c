@@ -96,28 +96,46 @@ void pixelBufferUpdate()
 // turns all pixels on, created for testing
 void whiteDisplay()
 {
-  int i,j;
-  for (i=0; i < 4; i++)
-	for(j=0; j<128; j++)
-      	displayBuffer[i][j]= 255;
+	int i,j;
+  	for (i=0; i < 4; i++)
+		for(j=0; j<128; j++)
+      		displayBuffer[i][j]= 255;
+
+	oledUpdate();
+
+
   return;
 }
+
+
+
+// turns all pixels on, created for testing
+void blackDisplay()
+{
+	int i,j;
+  	for (i=0; i < 4; i++)
+		for(j=0; j<128; j++)
+      		displayBuffer[i][j]= 0;
+
+	oledUpdate();
+
+
+  return;
+}
+
+
 
 
 // bufferReset clears the array of numbers so the screen turns black
 void bufferReset()
 {
+
     int i,j;
     for (i=0; i < 4; i++)
 		for(j=0; j<128; j++)
     	  	displayBuffer[i][j]= 0;
 
-	
 }
-
-
-
-
 
 
 
@@ -126,7 +144,7 @@ void bufferReset()
 
 
 // bufferUpdate updates the array displayBuffer with the pixels of the snakes's and apple's location
-void bufferUpdate()
+void GameBufferUpdate()
 {	
 	 // resets the buffer
 	bufferReset();
@@ -165,9 +183,14 @@ void bufferUpdate()
 		page = 1
 		displatbuffer[ 1 ][ 10 ] |= 0b00111000 ( 1<< 3)
 		  
-*/
-	}
+*/		
 	
+	}
+
+
+	oledUpdate();
+
+
 }
 
 
@@ -180,7 +203,6 @@ void bufferUpdate()
 void oledUpdate() 
 {	
 	
-	bufferUpdate();
 	int i, j;
 	for(i = 0; i < 4; i++) 
 	{
@@ -194,6 +216,7 @@ void oledUpdate()
 		DISPLAY_CHANGE_TO_DATA_MODE;
 		for (j = 0; j < 128; j++)
 			spi_send_recv(displayBuffer[i][j]);
+	
 	
 	}
 }

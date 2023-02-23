@@ -102,12 +102,8 @@ void user_isr(){
 
 }
 
-//GENERAL FUNCTIONS
-// void timer2delay(int ms)
-// {
-//     static timer2counter = 0;
-//     if (ifs)
-// }
+
+
 
 
 //returns a number between 1-100;
@@ -115,12 +111,8 @@ int randomnumber(int minvalue, int maxvalue)
 {   
     //srand((unsigned int) TMR4);
     //return (rand()% maxvalue);
-    int random;
-    while( 1 )
-    {   random = TMR2;
-        if(random > minvalue && random < maxvalue )
-            break;
-    }
+    int random = 2;
+    
     
     return random;
 }
@@ -134,6 +126,27 @@ int btnvalues()
 }
 
 
-// screen array ?? 
-//128 * 32 pixlar 
 
+
+
+
+// waitAWhile pauses the program for s seconds
+void waitAWhile(int s)
+{
+    
+    int wait10ms =0;
+
+    while (wait10ms == (s*100) )
+    {
+        if (IFS(0) & (1<<8))
+        {
+            IFSCLR(0) = (1<<8);
+            wait10ms++;
+        }
+
+        
+    }
+
+    return;
+    
+}

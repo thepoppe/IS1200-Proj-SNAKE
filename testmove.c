@@ -26,7 +26,7 @@ int pow2(int n)
 void createPixel()
 {
     
-    displayBuffer[0][0] = 1;
+    //displayBuffer[0][0] = 1;
     pixelPosX = 0;
     pixelPosY = 0;
     pixelBIT = 0;

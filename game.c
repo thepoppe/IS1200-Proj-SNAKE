@@ -2,43 +2,41 @@
 #include <C:\msys64\opt\mcb32tools\include\pic32mx.h>  
 #include "snakeheader.h"
 
-#define MAXP (128)
-#define MAXPAGES 4
+#define SCREENWIDTH 128
+#define SCREENPAGES 4
+#define PIXELBITS 8
+#define UNITSIZE 1  //pixel x pixel
+#define MAXPIXEL ((SCREENWIDTH * SCREENPAGES * PIXELBITS)/ UNITSIZE) //128 * 32 / unitsize
 
-
-const int SCREENWIDTH = 128;
-const int SCREENPAGES = 4;
-const int MAXPIXELS = 512;
-const int MAXBIT = 0xFF;
 
 
 // 2 arrays to keep track of all the snakes bodyparts
 // for x coordinate just keep tack of where all the parts are between 0-127
 // for y coordinates, snake y = page 0-3
 // snakeBit = bit value in that page
-int snakeX[MAXP *4]; 
-int snakeY[512];
-int snakeBit[512];
+int snakeX[MAXPIXEL]; 
+int snakeY[MAXPIXEL];
+int snakeBit[MAXPIXEL];
 
+// global variable for the snakes bodyparts
+int bodyParts = 4;
 
-
-int bodyParts = 5;
+//apple coordinates 
 int appleX;
 int appleY;
 int appleB;
+
+// general gameattriubutes
 int score = 0;
 char direction = 'R'; // R for RIGHT osv
 char gameON = 'F'; //F for false, T for True 
-int timer2counter =0; //global counter for timer2
+int timer2counter = 0; //global counter for timer2
 
 
 
 
 
-
-
-
-// initalize the snakes's head
+// initalize the snakes's head aka startpos
 void snakeInit()
 {
     snakeX[0] = 1;
@@ -52,20 +50,18 @@ void snakeInit()
         snakeBit[i] = 0;
     
 
-
-
 }
 
 
 
 
-//needs random
+//needs random**************************************************************
+// creates a new eatable apple at a random pixel
 void newApple()
 {
     appleX = 50;
     appleY = 1;
     appleB = 1;
-    bufferUpdate();
 
 }
 
@@ -74,23 +70,18 @@ void newApple()
 
 
 
-
-
-
-
-
+/*
+    function to move the coordinates of the snake by the 
+*/
 void moveSnake()
 {   
-    //hur får jag denna att kallas på av interrupt med timer??
-    oldchangeDirection();
 
-    
-    //updating the coordinates
+    //updating the coordinates for the tail. The tail follows the head
     int i;
     for(i = bodyParts ; i > 0; i--)
     {
         snakeX[i] = snakeX[i-1];        //bodypart = ett index bakom nästa body
-        snakeY[i] = snakeY[i-1];        //body follows head
+        snakeY[i] = snakeY[i-1];        
         snakeBit[i] = snakeBit[i-1];    
     }
     
@@ -104,21 +95,22 @@ void moveSnake()
 
 
 
-    if (direction == 'R' && snakeX[0] < 127)   //moving the head one index
+    //updating the heads (index 0) position depending on the current direction 
+    if (direction == 'R')   //moving the head one index to the right
         snakeX[0] += 1;
 
 
-    if(direction == 'L' && snakeX[0] > 0)
+    if(direction == 'L')
         snakeX[0] -= 1;
 
 
-    // if dir == down and the position is less than (1111 1111 1111 = page 3 lowest pixel)
+    // moving downwards and upwars need an if statement to cross between pages
     if (direction == 'D')
     {   
         if (snakeBit[0] < 7)
             snakeBit[0]++;
 
-        else if ((snakeBit[0] == 7) && snakeY[0] < 3)
+        else if ((snakeBit[0] == 7))
         {
             snakeY[0]++;
             snakeBit[0] = 0;
@@ -130,20 +122,13 @@ void moveSnake()
     {
         if (snakeBit[0] > 0) 
             snakeBit[0]--;
-        else if (snakeBit[0] == 0 && snakeY[0] > 0)
+        else if (snakeBit[0] == 0)
         {
             snakeY[0]--;
             snakeBit[0] = 7; 
         }  
+
     }
-
-
-
-
-
-
-    //uppdating the buffer for oled
-    bufferUpdate();
 
 }
 
@@ -155,7 +140,7 @@ void moveSnake()
 
 void checkCollision()
 {
-    //checking collision with apple, if true make new apple and increment length
+    //checking collision with apple, if true make new apple and increment bodyParts
     if ( (snakeX[0] == appleX) && (snakeY[0] == appleY) && (snakeBit[0] == appleB))
     {
         
@@ -168,7 +153,7 @@ void checkCollision()
         // {
         //     bodyParts++;
         //     moveSnake();
-        //     oledUpdate();
+        //     
         // }
         
 
@@ -177,7 +162,7 @@ void checkCollision()
 
 
 
-    //checking collision with the tail.
+    //checking collision with the tail, if true gameON = False.
     int i;
     for (i = 1; i < bodyParts ; i++ )
     {
@@ -208,7 +193,8 @@ void checkCollision()
 
 void resetGame()
 {   
-    bufferReset();
+    
+    
     direction = 'R';
     bodyParts = 4;
     appleB = 0;
@@ -223,10 +209,17 @@ void resetGame()
 
 void gameOver()
 {   
-    bufferReset();
-    resetGame();
+    whiteDisplay();
+    
     //show score press button to start again
-    delay(2000);
+
+
+    //check for highscore and store (IF TIME ALLOWS)
+
+
+    //quick reset of variables
+    resetGame();
+
     return;
 }
 
@@ -238,13 +231,14 @@ void startGame()
     
     newApple();
     snakeInit();
-    oledUpdate();
+    
     gameON = 'T';
     
 
     while (gameON == 'T')
     {  
 
+        
         if (IFS(0) & (1<<8))
         {
             IFSCLR(0) = (1<<8);
@@ -253,33 +247,25 @@ void startGame()
         if (timer2counter == 10) //borde ge 100 ms
         {   
             timer2counter = 0;
+            
             moveSnake();
+            GameBufferUpdate();
             checkCollision();
-            oledUpdate();
+            
         }
+
+        oldchangeDirection();
+
     
 
         
 
     }
-    timer2counter = 0;
-    while (1)
-    {
-        if (IFS(0) & (1<<8))
-        {
-            IFSCLR(0) = (1<<8);
-            timer2counter++;
-        }
-        if (timer2counter == 500) //10 ms*1000 = 10s
-        {
-            timer2counter=0;
-            break;
-
-        }
-            
-    }
     
+    //wait 2 seconds
+    waitAWhile(2);
 
+    //Call gameover
     gameOver();
 
     return;

@@ -8,6 +8,9 @@ int main(void) {
 	  This will set the peripheral bus clock to the same frequency
 	  as the sysclock. That means 80 MHz, when the microcontroller
 	  is running at 80 MHz. Changed 2017, as recommended by Axel.
+
+
+	  *** This code is copied from lab3 - file: time4ints ***
 	*/
 	SYSKEY = 0xAA996655;  /* Unlock OSCCON, step 1 */
 	SYSKEY = 0x556699AA;  /* Unlock OSCCON, step 2 */
@@ -47,18 +50,16 @@ int main(void) {
 	SPI2CONSET = 0x8000;
 	
 	
+
+	//initializationsprocess
 	displayInit();
 	IO_init();
 
 
 
-	/* SNAKE CODE*/
-	
-
-
+	// game starts
 	while(1)
 	{
-		delay(1000);
 		startGame();
 	}
 	
