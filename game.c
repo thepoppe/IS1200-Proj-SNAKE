@@ -39,15 +39,23 @@ int timer2counter = 0; //global counter for timer2
 // initalize the snakes's head aka startpos
 void snakeInit()
 {
-    snakeX[0] = 1;
-    snakeY[0] = 1;
-    snakeBit[0] = 1;
+    
 
 
     //resetting old array
     int i;
-    for(i =1; i < 512 ; i++)
+    for(i =0; i < 512 ; i++)
+    {
+
         snakeBit[i] = 0;
+        snakeX[i] = 0;
+        snakeY[i] =5;
+
+    }
+        snakeX[0] = 1;
+        snakeY[0] = 1;
+        snakeBit[0] = 1;
+    
     
 
 }
@@ -190,7 +198,7 @@ void checkCollision()
 void oldchangeDirection()
 {
 
-    if (PORTF & 0x2)// && direction != 'L')
+    if (PORTF & (0x2) && direction != 'L')
 		direction = 'R';
 			
 	if (PORTD & (1<<5) && direction != 'U')
@@ -199,7 +207,7 @@ void oldchangeDirection()
     if (PORTD & (1<<6) && direction != 'D')
 		direction = 'U';
 	//INPUT BTN 4
-	if (PORTD & (1<<7))// && direction != 'R')
+	if (PORTD & (1<<7) && direction != 'R')
 		direction = 'L';
 }
 
@@ -210,7 +218,6 @@ void oldchangeDirection()
 
 void resetGame()
 {   
-    
     
     direction = 'R';
     bodyParts = 4;
@@ -227,6 +234,7 @@ void resetGame()
 void gameOver()
 {   
     whiteDisplay();
+    wait10ms(300);
     
     //show score press button to start again
 
@@ -246,10 +254,15 @@ void gameOver()
 void startGame()
 {   
     
-    newApple();
+    
     snakeInit();
+    newApple();
+    
     
     gameON = 'T';
+    moveSnake();
+    GameBufferUpdate();
+    wait10ms(10); //10 ms * 100  = 100ms 
     
 
     while (gameON == 'T')
@@ -261,17 +274,18 @@ void startGame()
             IFSCLR(0) = (1<<8);
             timer2counter++;
         }
-        if (timer2counter == 10) //borde ge 100 ms
+        if (timer2counter == 20) //borde ge 100 ms
         {   
             timer2counter = 0;
             
             moveSnake();
             GameBufferUpdate();
             checkCollision();
+            oldchangeDirection();
             
         }
 
-        oldchangeDirection();
+        
 
     
 
@@ -279,8 +293,8 @@ void startGame()
 
     }
     
-    //wait 2 seconds
-    waitAWhile(2);
+    //wait 1 seconds
+    wait10ms(100);
 
     //Call gameover
     gameOver();

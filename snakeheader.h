@@ -30,11 +30,10 @@ void whiteDisplay();
 //uc32Config
 void IO_init(void);
 void user_isr();
-void waitAWhile(int s);
-
+void wait10ms(int);
 
 //labwork.S
-void enableEI();
+void enableEI(void);
 void delay(int);
 
 

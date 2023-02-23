@@ -130,13 +130,13 @@ int btnvalues()
 
 
 
-// waitAWhile pauses the program for s seconds
-void waitAWhile(int s)
+// wait10ms waits for 10 ms n times
+void wait10ms(int n)
 {
     
     int wait10ms =0;
 
-    while (wait10ms == (s*100) )
+    while (wait10ms < (n) )
     {
         if (IFS(0) & (1<<8))
         {
