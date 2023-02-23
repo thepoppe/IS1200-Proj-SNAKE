@@ -2,6 +2,8 @@
 #include <C:\msys64\opt\mcb32tools\include\pic32mx.h>  
 #include "snakeheader.h"
 
+#define MAXP (128)
+#define MAXPAGES 4
 
 
 const int SCREENWIDTH = 128;
@@ -14,7 +16,7 @@ const int MAXBIT = 0xFF;
 // for x coordinate just keep tack of where all the parts are between 0-127
 // for y coordinates, snake y = page 0-3
 // snakeBit = bit value in that page
-int snakeX[512]; 
+int snakeX[MAXP *4]; 
 int snakeY[512];
 int snakeBit[512];
 
@@ -27,6 +29,7 @@ int appleB;
 int score = 0;
 char direction = 'R'; // R for RIGHT osv
 char gameON = 'F'; //F for false, T for True 
+int timer2counter =0; //global counter for timer2
 
 
 
@@ -92,7 +95,7 @@ void moveSnake()
     }
     
     //this doesnt work ?? body doesnt increment 
-    // for(i = bodyparts; i <= bodyparts; i++)
+    // for(i = bodyParts; i <= bodyparts; i++)
     // {
     //     snakeX[i] = snakeX[i-1];
     //     snakeY[i] = snakeY[i-1];
@@ -175,11 +178,13 @@ void checkCollision()
 
 
     //checking collision with the tail.
-//BREAKS THE GAME
-    // int i;
-    // for (i = 1; i < bodyParts ; i++ )
-    //     if( (snakeX[0] == snakeX[i]) && (snakeY[0] == snakeY[i]) && (snakeBit[0] == snakeBit[i]))
-    //         gameON = 'F';
+    int i;
+    for (i = 1; i < bodyParts ; i++ )
+    {
+        if ( (snakeX[0] == snakeX[i]) && (snakeY[0] == snakeY[i] && (snakeBit[0] == snakeBit[i])) )
+            gameON = 'F';
+    }
+        
 
 
 
@@ -235,18 +240,46 @@ void startGame()
     snakeInit();
     oledUpdate();
     gameON = 'T';
-
+    
 
     while (gameON == 'T')
-    {   
-        checkCollision();
-        moveSnake();
-        delay(100);
-        oledUpdate();
+    {  
+
+        if (IFS(0) & (1<<8))
+        {
+            IFSCLR(0) = (1<<8);
+            timer2counter++;
+        }
+        if (timer2counter == 10) //borde ge 100 ms
+        {   
+            timer2counter = 0;
+            moveSnake();
+            checkCollision();
+            oledUpdate();
+        }
+    
+
         
 
     }
-    delay(1000);
+    timer2counter = 0;
+    while (1)
+    {
+        if (IFS(0) & (1<<8))
+        {
+            IFSCLR(0) = (1<<8);
+            timer2counter++;
+        }
+        if (timer2counter == 500) //10 ms*1000 = 10s
+        {
+            timer2counter=0;
+            break;
+
+        }
+            
+    }
+    
+
     gameOver();
 
     return;

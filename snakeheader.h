@@ -1,7 +1,4 @@
 
-
-
-
 //testmove
 void moveAPixel();
 void oldchangeDirection();
@@ -11,9 +8,9 @@ void oldchangeDirection();
 //game.c
 extern char direction;
 extern int bodyParts;
-extern int snakeX[512];
-extern int snakeY[512];
-extern int snakeBit[512];
+extern int snakeX[];
+extern int snakeY[];
+extern int snakeBit[];
 extern int appleX;
 extern int appleY;
 extern int appleB;

@@ -15,7 +15,7 @@ void IO_init(void)
 
     T2CON = 0; //clear timer
     TMR2 = 0x0; // initial timer value =0
-    PR2 = (31250); // period value = with 80 Mhz/256 prescale/ 10hz = 31250 
+    PR2 = ((80000000/256) / 100); // period value = with 80 Mhz/256 prescale/ 100hz = 3125. DETTA ger 10 ms 
     T2CONSET = (7 << 4); //prescale = 256  (111 << 4 = 111 0000 = bit 4-6)  CONSET?
     T2CONSET = 0x8000; // Start the timer  
 
@@ -31,13 +31,15 @@ void IO_init(void)
 
 
     //enable interupt
-    enableEI();
+    //enableEI();
 
     //enable interrupt on Sw1, prio 2
-    IECSET(0) = (1<<7);
-    IPCSET(1) = (2 << 26);
-    IECSET(0) = (1<<19);
-    IPCSET(4) = (2 << 26);
+    //IECSET(0) = (1<<7);
+    //IPCSET(1) = (2 << 26);
+
+    //enable interupt on sw4
+    //IECSET(0) = (1<<19);
+    //IPCSET(4) = (2 << 26);
 
     //enable timer2 interrupts for changing direction, prio 1
     //IECSET(0) = (1<<4);
@@ -101,6 +103,11 @@ void user_isr(){
 }
 
 //GENERAL FUNCTIONS
+// void timer2delay(int ms)
+// {
+//     static timer2counter = 0;
+//     if (ifs)
+// }
 
 
 //returns a number between 1-100;
