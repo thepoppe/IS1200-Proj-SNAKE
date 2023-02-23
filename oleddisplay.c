@@ -70,6 +70,20 @@ void displayInit(void) {
 
 
 
+
+
+
+//buffer array with all pixels. NOT USED
+uint8_t display[512];
+
+//buffer array for the oled that is 128 pixel times 4 pages of 8 pixels
+uint8_t displayBuffer[4][128];
+
+
+
+
+
+
 // ***OBS Copied from lab 3, time4io. Some changes made to the code ***
 void oledUpdate() 
 {	
@@ -107,14 +121,6 @@ void bufferReset()
 }
 
 
-
-
-
-//buffer array with all pixels. NOT USED
-uint8_t display[512];
-
-//buffer array for the oled that is 128 pixel times 4 pages of 8 pixels
-uint8_t displayBuffer[4][128];
 
 
 

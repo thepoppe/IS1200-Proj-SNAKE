@@ -6,7 +6,7 @@
 #define SCREENPAGES 4
 #define PIXELBITS 8
 #define UNITSIZE 1  //pixel x pixel
-#define MAXPIXEL ((SCREENWIDTH * SCREENPAGES * PIXELBITS)/ UNITSIZE) //128 * 32 / unitsize
+#define MAXPIXEL ((SCREENWIDTH * SCREENPAGES )/ UNITSIZE) //128 * 32 / unitsize
 
 
 
@@ -185,6 +185,23 @@ void checkCollision()
         gameON = 'F';
 }
 
+
+// changes the direction with 4 BTNS
+void oldchangeDirection()
+{
+
+    if (PORTF & 0x2)// && direction != 'L')
+		direction = 'R';
+			
+	if (PORTD & (1<<5) && direction != 'U')
+		direction = 'D';
+    //INPUT BTN 3
+    if (PORTD & (1<<6) && direction != 'D')
+		direction = 'U';
+	//INPUT BTN 4
+	if (PORTD & (1<<7))// && direction != 'R')
+		direction = 'L';
+}
 
 
 
