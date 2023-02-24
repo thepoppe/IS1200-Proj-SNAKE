@@ -274,7 +274,7 @@ void startGame()
             IFSCLR(0) = (1<<8);
             timer2counter++;
         }
-        if (timer2counter == 20) //borde ge 100 ms
+        if (timer2counter ==    10) //borde ge 100 ms
         {   
             timer2counter = 0;
             
