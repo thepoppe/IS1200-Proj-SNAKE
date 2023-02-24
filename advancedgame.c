@@ -38,7 +38,7 @@ int timer2counter = 0; //global counter for timer2
 
 
 // initalize the snakes's head aka startpos
-void snakeInit()
+void snakeInit2D()
 {
     
 
@@ -66,7 +66,7 @@ void snakeInit()
 
 //needs random**************************************************************
 // creates a new eatable apple at a random pixel
-void newApple()
+void newApple2D()
 {
     appleX[0] = 50;
     appleY[0] = 1;
@@ -87,7 +87,7 @@ void newApple()
 /*
     function to move the coordinates of the snake by the 
 */
-void moveSnake()
+void moveSnake2D()
 {   
 
     //updating the coordinates for the tail. The tail follows the head
