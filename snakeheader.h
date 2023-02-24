@@ -37,3 +37,7 @@ void enableEI(void);
 void delay(int);
 
 
+
+
+//advancegame
+void GameBufferUpdate2D();
