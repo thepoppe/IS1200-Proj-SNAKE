@@ -20,6 +20,20 @@
 #define DISPLAY_TURN_OFF_VBAT (PORTFSET = 0x20)
 
 
+
+
+//buffer array with all pixels. NOT USED
+uint8_t display[512];
+
+//buffer array for the oled that is 128 pixel times 4 pages of 8 pixels
+uint8_t displayBuffer[4][128];
+
+
+
+
+
+
+
 // ***OBS Copied from lab 3, time4io ***
 void quicksleep(int cyc) {
 	int i;
@@ -71,20 +85,69 @@ void displayInit(void) {
 
 
 
+// ***OBS Copied from lab 3, time4io ***
+void display_string(int line, char *s) {
+	int i;
+	if(line < 0 || line >= 4)
+		return;
+	if(!s)
+		return;
+	
+	for(i = 0; i < 16; i++)
+		if(*s) {
+			textbuffer[line][i] = *s;
+			s++;
+		} else
+			textbuffer[line][i] = ' ';
+}
 
 
-//buffer array with all pixels. NOT USED
-uint8_t display[512];
-
-//buffer array for the oled that is 128 pixel times 4 pages of 8 pixels
-uint8_t displayBuffer[4][128];
 
 
 
+// ***OBS Copied from lab 3, time4io ***
+void display_update(void) {
+	int i, j, k;
+	int c;
+	for(i = 0; i < 4; i++) {
+		DISPLAY_CHANGE_TO_COMMAND_MODE;
+		spi_send_recv(0x22);
+		spi_send_recv(i);
+		
+		spi_send_recv(0x0);
+		spi_send_recv(0x10);
+		
+		DISPLAY_CHANGE_TO_DATA_MODE;
+		
+		for(j = 0; j < 16; j++) {
+			c = textbuffer[i][j];
+			if(c & 0x80)
+				continue;
+			
+			for(k = 0; k < 8; k++)
+				spi_send_recv(font[c*8 + k]);
+		}
+	}
+}
 
 
 
-// ***OBS Copied from lab 3, time4io. Some changes made to the code ***
+
+// small function to print 4 rows at once
+void printStrings(char* s0, char* s1, char* s2, char* s3 )
+{
+    blackDisplay();
+    display_string(0, s0); 
+    display_string(1, s1); 
+    display_string(2, s2);
+    display_string(3, s3);
+    display_update();
+}
+
+
+
+
+// ***OBS Copied from lab 3, time4io "displayupdate". Some changes made to the suit code ***
 void oledUpdate() 
 {	
 	

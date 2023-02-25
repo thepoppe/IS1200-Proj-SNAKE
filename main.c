@@ -60,7 +60,7 @@ int main(void) {
 	// game starts
 	while(1)
 	{
-		startGame();
+		gameMeny();
 	}
 	
 

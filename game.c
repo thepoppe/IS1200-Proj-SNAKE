@@ -31,6 +31,11 @@ int score = 0;
 char direction = 'R'; // R for RIGHT osv
 char gameON = 'F'; //F for false, T for True 
 int timer2counter = 0; //global counter for timer2
+int levelspeed = 10;
+int levelBodyParts = 16;
+int highscore[3*sizeof(int)];
+char highscoreSTRINGS[3][16];
+
 
 
 
@@ -67,7 +72,7 @@ void snakeInit()
 // creates a new eatable apple at a random pixel
 void newApple()
 {
-    appleX = 50;
+    appleX = 10;
     appleY = 1;
     appleB = 1;
 
@@ -151,19 +156,9 @@ void checkCollision()
     //checking collision with apple, if true make new apple and increment bodyParts
     if ( (snakeX[0] == appleX) && (snakeY[0] == appleY) && (snakeBit[0] == appleB))
     {
-        
         score++;
-        bodyParts +=20;
+        bodyParts += levelBodyParts;
         newApple();
-        
-        // int i;
-        // for (i=0; i < 10 ;i++)
-        // {
-        //     bodyParts++;
-        //     moveSnake();
-        //     
-        // }
-        
 
     }
 
@@ -194,13 +189,15 @@ void checkCollision()
 }
 
 
-// changes the direction with 4 BTNS
+
+
+// changes the variable direction with 4 BTNS
 void oldchangeDirection()
 {
-
+    //INPUT BTN 1
     if (PORTF & (0x2) && direction != 'L')
 		direction = 'R';
-			
+	//INPUT BTN 2		
 	if (PORTD & (1<<5) && direction != 'U')
 		direction = 'D';
     //INPUT BTN 3
@@ -215,36 +212,107 @@ void oldchangeDirection()
 
 
 
-
-void resetGame()
-{   
-    
-    direction = 'R';
-    bodyParts = 4;
-    appleB = 0;
-    score = 0;
-
-    return;
-
+// *** OBS copied from lab3, time4IO ***
+/* Helper function, local to this file.
+   Converts a number to hexadecimal ASCII digits. */
+static void num32asc( char * s, int n ) 
+{
+  int i;
+  for( i = 28; i >= 0; i -= 4 )
+    *s++ = "0123456789ABCDEF"[ (n >> i) & 15 ];
 }
 
 
 
 
+//checks if score is a a top 3 highscore, if yes replaces it
+void checkHighscore()
+{
+    int i;
+    if (score > highscore[0])
+    {   
+        //moving the scores one spot
+        for (i = 2; i > 0; i--)
+        {   
+            if (highscore[i-1] != 0) // to avoid third being filled with false score
+                highscore[i] = highscore[i-1];
+        }
+            
+        highscore[0] = score;
+        printStrings( "HIGHSCORE!", "Your score is", "number 1", "1 to continue"  );
+
+    }
+    else if (score > highscore[1])
+    {
+        highscore[2] = highscore[1];
+        highscore[1] = score;
+        printStrings( "HIGHSCORE!", "Your score is", "number 2", "1 to continue"  );
+
+    }
+    else if ( score > highscore[2])
+    {
+        highscore[2] = score;
+        printStrings( "HIGHSCORE!", "Your score is", "number 3", "1 to continue"  );
+    }    
+    else 
+        return;
+
+
+
+
+
+//updating the chararray
+    for (i = 0; i < 3; i++)
+    {
+        num32asc(highscoreSTRINGS[i],highscore[i]);
+
+    }
+
+
+}
+
+
+
+// gameover prints game over, shows the score and checks for highscore
 void gameOver()
 {   
-    whiteDisplay();
-    wait10ms(300);
+    blackDisplay();
+    wait10ms(100);
     
-    //show score press button to start again
+ //show score press a button to start again.
+    char yourscore[10];
+    num32asc(yourscore, score);
 
 
+    printStrings( "GAME OVER!", "Score: ", yourscore, "1 to continue"  );
+
+    while(btnvalues() == 0)
+    {
+        //wait
+    }
+
+    blackDisplay();
+    wait10ms(40);
+
+    
     //check for highscore and store (IF TIME ALLOWS)
+    checkHighscore();
+    while(btnvalues() == 0)
+    {
+        //wait
+    }
+
+    blackDisplay();
+    wait10ms(40);
 
 
     //quick reset of variables
-    resetGame();
+    direction = 'R';
+    bodyParts = 4;
+    appleB = 0;
+    score = 0;
 
+    
     return;
 }
 
@@ -274,7 +342,7 @@ void startGame()
             IFSCLR(0) = (1<<8);
             timer2counter++;
         }
-        if (timer2counter ==    10) //borde ge 100 ms
+        if (timer2counter ==  levelspeed) // 10 on default 100ms
         {   
             timer2counter = 0;
             
@@ -303,4 +371,100 @@ void startGame()
 
 }
 
+
+
+
+
+
+void gameMeny()
+{   
+    
+
+    //A LOGO WOULD BE COOL
+
+
+    //wait 2 seconds
+    wait10ms(200);
+    
+
+    while(1)
+    {   
+        printStrings("  * SNAKE *", "1 - Start game!", "2 - Difficulty", "3 - Highscores");
+        while(1)
+        {
+
+            //start game
+            if (btnvalues() & (1<<2))
+            {
+                blackDisplay();
+                wait10ms(40);
+                startGame();
+                break;
+            }
+
+
+            //Level menu
+            if (btnvalues() & ( 1 << 1))
+            {
+                blackDisplay();
+                wait10ms(40);
+                printStrings("* LEVEL *","1 - Easy","2 - Medium","3 - Hard");
+                int choice = 0;
+                while(choice == 0)
+                {
+                    choice = btnvalues();
+                    wait10ms(10);
+                }
+                    if( choice & (1<<7))
+                    {
+                        levelspeed = 15;
+                        levelBodyParts = 4;
+
+                    }
+                        
+        
+                    if( choice & (1<<6))
+                        {
+                            levelspeed = 5;
+                            levelBodyParts = 8;
+                        }
+
+
+                    if( choice & (1<<5))
+                        {
+                            levelspeed = 0.5;
+                            levelBodyParts = 16;
+                        }
+
+            
+            break;
+            }
+
+
+            //Highscore menu
+            if (btnvalues() & 1 )
+            {
+                blackDisplay();
+                wait10ms(40);
+                printStrings("* Highscore *", highscoreSTRINGS[0], highscoreSTRINGS[1], highscoreSTRINGS[2]);
+
+                while (btnvalues() == 0)
+                {
+                    //wait
+                }
+               
+
+                break;
+            }
+            
+            
+        }
+
+        blackDisplay();
+        //wait 0.4 seconds
+        wait10ms(40);
+    }
+
+    
+}
 

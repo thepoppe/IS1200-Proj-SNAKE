@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <stdint.h>  
 #include <C:\msys64\opt\mcb32tools\include\pic32mx.h>  
 #include "snakeheader.h"
@@ -110,11 +111,20 @@ void user_isr(){
 int randomnumber(int minvalue, int maxvalue)
 {   
     //srand((unsigned int) TMR4);
-    //return (rand()% maxvalue);
-    int random = 2;
+    
+    //int random = rand()%127;
+
+    int badrandom = TMR2;
+    while (badrandom < minvalue && badrandom > maxvalue)
+    {
+        //random = rand()%127;
+
+        badrandom = TMR2;
+
+    }
     
     
-    return random;
+    return badrandom;
 }
 
 
