@@ -110,21 +110,21 @@ void user_isr(){
 //returns a number between 1-100;
 int randomnumber(int minvalue, int maxvalue)
 {   
-    //srand((unsigned int) TMR4);
+    srand((unsigned int) TMR4);
     
-    //int random = rand()%127;
+    int random = rand()%127;
 
-    int badrandom = TMR2;
-    while (badrandom < minvalue && badrandom > maxvalue)
+    //int badrandom = TMR2;
+    while (random > minvalue && random < maxvalue)
     {
-        //random = rand()%127;
+        random = rand()%127;
 
-        badrandom = TMR2;
+        //badrandom = TMR2;
 
     }
     
     
-    return badrandom;
+    return random;
 }
 
 

@@ -1,6 +1,7 @@
 #include <stdint.h>  
 #include <C:\msys64\opt\mcb32tools\include\pic32mx.h>  
 #include "snakeheader.h"
+#include <string.h>
 
 #define SCREENWIDTH 128
 #define SCREENPAGES 4
@@ -72,7 +73,7 @@ void snakeInit()
 // creates a new eatable apple at a random pixel
 void newApple()
 {
-    appleX = 10;
+    appleX = randomnumber( 5, 125 );
     appleY = 1;
     appleB = 1;
 
@@ -225,6 +226,22 @@ static void num32asc( char * s, int n )
 
 
 
+void concatenateString(char* s1, char* s2)
+{
+    int i, j = 0;
+    
+    int size1 = 16;
+    
+    for ( i = 0; i < size1; i++ )
+    {  
+        if ( s1[i] == 0x0 && s2[j] != 0x0)
+           s1[i] = s2[j++];    
+      
+    }
+   
+}
+
+
 //checks if score is a a top 3 highscore, if yes replaces it
 void checkHighscore()
 {
@@ -259,8 +276,6 @@ void checkHighscore()
 
 
 
-
-
 //updating the chararray
     for (i = 0; i < 3; i++)
     {
@@ -273,18 +288,23 @@ void checkHighscore()
 
 
 
+
 // gameover prints game over, shows the score and checks for highscore
 void gameOver()
 {   
     blackDisplay();
     wait10ms(100);
     
- //show score press a button to start again.
-    char yourscore[10];
+
+ //show score press a button to start again
+    char yourscore[9], finaltext[16] = "Score:";
     num32asc(yourscore, score);
+    concatenateString(finaltext, yourscore);
+    //strcat(text, yourscore);
+
+    printStrings( "GAME OVER!", finaltext, "" , "1 to continue"  );
 
 
-    printStrings( "GAME OVER!", "Score: ", yourscore, "1 to continue"  );
 
     while(btnvalues() == 0)
     {
@@ -446,7 +466,7 @@ void gameMeny()
             {
                 blackDisplay();
                 wait10ms(40);
-                printStrings("* Highscore *", highscoreSTRINGS[0], highscoreSTRINGS[1], highscoreSTRINGS[2]);
+                printStrings("* Highscores *", highscoreSTRINGS[0], highscoreSTRINGS[1], highscoreSTRINGS[2]);
 
                 while (btnvalues() == 0)
                 {
