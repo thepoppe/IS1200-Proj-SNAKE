@@ -41,13 +41,9 @@ char highscoreSTRINGS[3][16];
 
 
 
-
 // initalize the snakes's head aka startpos
 void snakeInit()
 {
-    
-
-
     //resetting old array
     int i;
     for(i =0; i < 512 ; i++)
@@ -62,8 +58,6 @@ void snakeInit()
         snakeY[0] = 1;
         snakeBit[0] = 1;
     
-    
-
 }
 
 
@@ -78,8 +72,6 @@ void newApple()
     appleB = 1;
 
 }
-
-
 
 
 
@@ -100,13 +92,12 @@ void moveSnake()
     }
     
     //this doesnt work ?? body doesnt increment 
-    // for(i = bodyParts; i <= bodyparts; i++)
+    // for(i = 0; i < bodyParts; i++)
     // {
-    //     snakeX[i] = snakeX[i-1];
-    //     snakeY[i] = snakeY[i-1];
-    //     snakeBit[i] = snakeBit[i-1];
+    //     snakeX[i+1] = snakeX[i];
+    //     snakeY[i+1] = snakeY[i];
+    //     snakeBit[i+1] = snakeBit[i];
     // }
-
 
 
     //updating the heads (index 0) position depending on the current direction 
@@ -149,9 +140,6 @@ void moveSnake()
 
 
 
-
-
-
 void checkCollision()
 {
     //checking collision with apple, if true make new apple and increment bodyParts
@@ -164,8 +152,6 @@ void checkCollision()
     }
 
 
-
-
     //checking collision with the tail, if true gameON = False.
     int i;
     for (i = 1; i < bodyParts ; i++ )
@@ -174,9 +160,6 @@ void checkCollision()
             gameON = 'F';
     }
         
-
-
-
 
     //checking collsion with outer borders, if true gameON = False
     if ( snakeX[0] == 127)
@@ -188,7 +171,6 @@ void checkCollision()
     if ( snakeY[0] == 3 && snakeBit[0]== 7)
         gameON = 'F';
 }
-
 
 
 
@@ -211,20 +193,7 @@ void oldchangeDirection()
 
 
 
-
-
-// *** OBS copied from lab3, time4IO ***
-/* Helper function, local to this file.
-   Converts a number to hexadecimal ASCII digits. */
-static void num32asc( char * s, int n ) 
-{
-  int i;
-  for( i = 28; i >= 0; i -= 4 )
-    *s++ = "0123456789ABCDEF"[ (n >> i) & 15 ];
-}
-
-
-
+// helperfunction to convert the score to a string 
 void integerToString(char * list, int listSize, int number)
 {
     int i;
@@ -246,8 +215,7 @@ void integerToString(char * list, int listSize, int number)
    
 
 
-
-
+//helperfunction to add 2 strings together
 void concatenateString(char* s1, char* s2)
 {
     int i, j = 0;
@@ -262,6 +230,7 @@ void concatenateString(char* s1, char* s2)
     }
    
 }
+
 
 
 //checks if score is a a top 3 highscore, if yes replaces it
@@ -293,18 +262,15 @@ void checkHighscore()
         highscore[2] = score;
         printStrings( "HIGHSCORE!", "Your score is", "number 3", "1 to continue"  );
     }    
-    else 
+    else {
+        printStrings( "* * * * * * * *", "Your score was", "too low...", "1 to continue"  );
         return;
-
-
-
-//updating the chararray
-    for (i = 0; i < 3; i++)
-    {
-        integerToString(highscoreSTRINGS[i], sizeof(highscoreSTRINGS[i]),highscore[i]);
-
     }
 
+
+    //updating the chararray
+    for (i = 0; i < 3; i++)
+        integerToString(highscoreSTRINGS[i], sizeof(highscoreSTRINGS[i]),highscore[i]);
 
 }
 
@@ -317,15 +283,12 @@ void gameOver()
     blackDisplay();
     wait10ms(100);
     
-
  //show score press a button to start again
     char yourscore[16], finaltext[16] = "Score:   ";
     integerToString(yourscore, 16,  score);
     concatenateString(finaltext, yourscore);
     //strcat(text, yourscore);
-
     printStrings( "GAME OVER!", finaltext, "" , "1 to continue"  );
-
 
 
     while(btnvalues() == 0)
@@ -345,7 +308,7 @@ void gameOver()
     }
 
     blackDisplay();
-    wait10ms(40);
+    wait10ms(20);
 
 
     //quick reset of variables
@@ -354,8 +317,6 @@ void gameOver()
     appleB = 0;
     score = 0;
 
-    
-    return;
 }
 
 
@@ -363,11 +324,8 @@ void gameOver()
 
 void startGame()
 {   
-    
-    
     snakeInit();
     newApple();
-    
     
     gameON = 'T';
     moveSnake();
@@ -377,8 +335,6 @@ void startGame()
 
     while (gameON == 'T')
     {  
-
-        
         if (IFS(0) & (1<<8))
         {
             IFSCLR(0) = (1<<8);
@@ -394,13 +350,6 @@ void startGame()
             oldchangeDirection();
             
         }
-
-        
-
-    
-
-        
-
     }
     
     //wait 1 seconds
@@ -409,19 +358,13 @@ void startGame()
     //Call gameover
     gameOver();
 
-    return;
-
 }
 
 
 
-
-
-
+// game meny uses buttons to toggle to the game,level and highscore
 void gameMeny()
 {   
-    
-
     //A LOGO WOULD BE COOL
 
 
@@ -432,14 +375,14 @@ void gameMeny()
     while(1)
     {   
         printStrings("  * SNAKE *", "1 - Start game!", "2 - Difficulty", "3 - Highscores");
+
         while(1)
         {
-
             //start game
             if (btnvalues() & (1<<2))
             {
                 blackDisplay();
-                wait10ms(40);
+                wait10ms(30);
                 startGame();
                 break;
             }
@@ -449,7 +392,7 @@ void gameMeny()
             if (btnvalues() & ( 1 << 1))
             {
                 blackDisplay();
-                wait10ms(40);
+                wait10ms(30);
                 printStrings("* LEVEL *","1 - Easy","2 - Medium","3 - Hard");
                 int choice = 0;
                 while(choice == 0)
@@ -457,26 +400,23 @@ void gameMeny()
                     choice = btnvalues();
                     wait10ms(10);
                 }
-                    if( choice & (1<<7))
-                    {
-                        levelspeed = 15;
-                        levelBodyParts = 4;
-
-                    }
+                if( choice & (1<<7))
+                {
+                    levelspeed = 15;
+                    levelBodyParts = 4;
+                }
                         
-        
-                    if( choice & (1<<6))
-                        {
-                            levelspeed = 5;
-                            levelBodyParts = 8;
-                        }
+                if( choice & (1<<6))
+                {
+                    levelspeed = 5;
+                    levelBodyParts = 8;
+                }
 
-
-                    if( choice & (1<<5))
-                        {
-                            levelspeed = 0.5;
-                            levelBodyParts = 16;
-                        }
+                if( choice & (1<<5))
+                {
+                    levelspeed = 0.5;
+                    levelBodyParts = 16;
+                }
 
             
             break;
@@ -487,7 +427,7 @@ void gameMeny()
             if (btnvalues() & 1 )
             {
                 blackDisplay();
-                wait10ms(40);
+                wait10ms(30);
                 printStrings("* Highscores *", highscoreSTRINGS[0], highscoreSTRINGS[1], highscoreSTRINGS[2]);
 
                 while (btnvalues() == 0)
@@ -495,18 +435,16 @@ void gameMeny()
                     //wait
                 }
                
-
                 break;
             }
             
-            
         }
 
+        //turn the screen black
         blackDisplay();
         //wait 0.4 seconds
         wait10ms(40);
     }
 
-    
 }
 

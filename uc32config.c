@@ -13,7 +13,7 @@ void IO_init(void)
     TRISDSET = (0b111 << 5); //BTN4,3,2
     TRISFSET = 0x2; //BTN1
 
-
+    //timer 2 used for menues etc flag on pin 8
     T2CON = 0; //clear timer
     TMR2 = 0x0; // initial timer value =0
     PR2 = ((80000000/256) / 100); // period value = with 80 Mhz/256 prescale/ 100hz = 3125. DETTA ger 10 ms 
@@ -22,11 +22,12 @@ void IO_init(void)
 
   
 
-    //timer 4 used for random number.
-    //    T4CON = 0; //clear timer
-    //    TMR4 = 0x0; // initial timer value =0
-    //  PR4 = 1337; 
-    //  T4CONSET = 0x8000; // Start the timer 
+    //timer 4 used for gamespeed. flag on pin 16
+    T4CON = 0; //clear timer
+    TMR4 = 0x0; // initial timer value =0
+    PR4 = ((80000000/256) / 1000) ;// 1 ms = 0,001s => f=1000
+    T4CONSET = (7 << 4); //prescale = 64?  (111 << 4 = 111 0000 = bit 4-6)  CONSET? 
+    T4CONSET = 0x8000; // Start the timer 
 
 
 
