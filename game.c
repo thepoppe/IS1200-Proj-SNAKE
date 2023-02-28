@@ -73,7 +73,7 @@ void snakeInit()
 // creates a new eatable apple at a random pixel
 void newApple()
 {
-    appleX = randomnumber( 5, 125 );
+    appleX = 10;//randomnumber( 5, 125 );
     appleY = 1;
     appleB = 1;
 
@@ -224,6 +224,26 @@ static void num32asc( char * s, int n )
 }
 
 
+void integerToString(char * list, int listSize, int number)
+{
+    int i;
+    int temp =0x0;
+    int size = sizeof(number);
+    
+
+    for ( i= 0; i < size; i++)
+    {   
+        temp = number % 10; //to split the number into digits. 
+        number = number /10;
+        temp+= 0x30;
+        if( i < listSize) // just to be safe
+            list[size - i-1] = temp;
+
+    }
+}
+   
+
+
 
 
 void concatenateString(char* s1, char* s2)
@@ -297,7 +317,7 @@ void gameOver()
     
 
  //show score press a button to start again
-    char yourscore[9], finaltext[16] = "Score:";
+    char yourscore[16], finaltext[16] = "Score:  ";
     num32asc(yourscore, score);
     concatenateString(finaltext, yourscore);
     //strcat(text, yourscore);
