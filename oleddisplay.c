@@ -1,12 +1,15 @@
+/* game.c
+   This file written 2023 by P Morin
+   some parts copied from lab3, time4io
+   
+
+   For copyright and licensing, see file COPYING */
 
 
 
 #include <stdint.h>  
 #include <C:\msys64\opt\mcb32tools\include\pic32mx.h>  
 #include "snakeheader.h"
-
-
-
 
 
 // ***OBS Copied from lab 3, time4io ***
@@ -24,12 +27,8 @@
 
 //buffer array with all pixels. NOT USED
 uint8_t display[512];
-
 //buffer array for the oled that is 128 pixel times 4 pages of 8 pixels
 uint8_t displayBuffer[4][128];
-
-
-
 
 
 
@@ -84,7 +83,6 @@ void displayInit(void) {
 
 
 
-
 // ***OBS Copied from lab 3, time4io ***
 void display_string(int line, char *s) {
 	int i;
@@ -100,7 +98,6 @@ void display_string(int line, char *s) {
 		} else
 			textbuffer[line][i] = ' ';
 }
-
 
 
 
@@ -147,7 +144,9 @@ void printStrings(char* s0, char* s1, char* s2, char* s3 )
 
 
 
-// ***OBS Copied from lab 3, time4io "displayupdate". Some changes made to the suit code ***
+// ***OBS Copied and renamed from lab 3, time4io "displayupdate()".
+//    Some changes made to the suit the code ***
+// oledUpdate sends the information in displayBuffer to the screen
 void oledUpdate() 
 {	
 	
@@ -186,20 +185,6 @@ void bufferReset()
 
 
 
-
-
-
-// old buffer to update one single pixel
-void pixelBufferUpdate()
-{
-	//bufferReset();
-	//displayBuffer[pixelPosY][pixelPosX] = (1 << pixelBIT);  
-}
-
-
-
-
-
 // turns all pixels on, created for testing
 void whiteDisplay()
 {
@@ -234,9 +219,7 @@ void blackDisplay()
 
 
 
-
-
-// bufferUpdate updates the array displayBuffer with the pixels of the snakes's and apple's location
+// bufferUpdate updates the array displayBuffer with the pixels of the snakes's and apple's current location
 void GameBufferUpdate()
 {	
 	 // resets the buffer
@@ -249,13 +232,9 @@ void GameBufferUpdate()
 	// adds the snake to the array
 	int i = bodyParts;
 	while(i >= 0)
-	{	
-		//if (snakeBit[i] == 7)
-		//	page--;
-		
+	{			
 		displayBuffer[ snakeY[i] ][ snakeX[i] ] |= (1 << snakeBit[i]);
 		i--;
-
 /*		
 		//ex 3 bodyparts,  moving down		
 		head x[0]=10

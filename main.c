@@ -1,3 +1,10 @@
+/* game.c
+   This file written 2023 by P Morin
+   some parts copied from lab3, time4io
+   
+
+   For copyright and licensing, see file COPYING */
+
 #include <stdint.h>  
 #include <C:\msys64\opt\mcb32tools\include\pic32mx.h>  
 #include "snakeheader.h"
@@ -12,6 +19,10 @@ int main(void) {
 
 	  *** This code is copied from lab3 - file: time4ints ***
 	*/
+
+	/*************************************
+	copied part starts here
+	*************************************/
 	SYSKEY = 0xAA996655;  /* Unlock OSCCON, step 1 */
 	SYSKEY = 0x556699AA;  /* Unlock OSCCON, step 2 */
 	while(OSCCON & (1 << 21)); /* Wait until PBDIV ready */
@@ -48,7 +59,9 @@ int main(void) {
 	SPI2CONSET = 0x20;
 	/* SPI2CON bit ON = 1; */
 	SPI2CONSET = 0x8000;
-	
+	/*************************************
+	copied part ends here
+	*************************************/
 	
 
 	//initializationsprocess

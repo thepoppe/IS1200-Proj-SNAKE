@@ -1,7 +1,13 @@
+/* game.c
+   This file written 2023 by P Morin
+   
+
+   For copyright and licensing, see file COPYING */
+
 #include <stdint.h>  
 #include <C:\msys64\opt\mcb32tools\include\pic32mx.h>  
 #include "snakeheader.h"
-#include <string.h>
+
 
 #define SCREENWIDTH 128
 #define SCREENPAGES 4
@@ -27,7 +33,7 @@ int appleX;
 int appleY;
 int appleB;
 
-// general gameattriubutes
+// general gameattributes
 int score = 0;
 char direction = 'R'; // R for RIGHT osv
 char gameON = 'F'; //F for false, T for True 
@@ -63,22 +69,20 @@ void snakeInit()
 
 
 
-//needs random**************************************************************
+
 // creates a new eatable apple at a random pixel
 void newApple()
 {
-    appleX = 10;//randomnumber( 5, 125 );
-    appleY = 1;
-    appleB = 1;
+    appleX = randomnumber( 5, 125 );
+    appleY = randomnumber( 0, 3 );
+    appleB = randomnumber( 1, 7 );
 
 }
 
 
 
 
-/*
-    function to move the coordinates of the snake by the 
-*/
+//function to move the coordinates of the snake by the 
 void moveSnake()
 {   
 

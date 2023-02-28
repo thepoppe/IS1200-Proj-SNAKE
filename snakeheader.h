@@ -1,7 +1,8 @@
+/* game.c
+   This file written 2023 by P Morin
+   
 
-//testmove
-void moveAPixel();
-void oldchangeDirection();
+   For copyright and licensing, see file COPYING */
 
 
 
@@ -15,10 +16,10 @@ extern int appleX;
 extern int appleY;
 extern int appleB;
 void gameMeny();
+void oldchangeDirection();
 
 
-
-// oleddisplay
+// oleddisplay.c
 void displayInit(void);
 void display_string(int, char *);
 void display_update(void);
@@ -29,7 +30,7 @@ void blackDisplay();
 
 
 
-//mipslabfunc
+//mipslabfunc.c
 extern char textbuffer[4][16];
 extern const uint8_t const font[];
 
@@ -37,12 +38,13 @@ extern const uint8_t const font[];
 
 
 
-//uc32Config
+//uc32Config.c
 void IO_init(void);
 void user_isr();
 void wait10ms(int);
 int btnvalues();
 int randomnumber(int, int);
+
 
 //labwork.S
 void enableEI(void);
