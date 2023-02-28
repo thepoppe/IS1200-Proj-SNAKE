@@ -224,6 +224,7 @@ static void num32asc( char * s, int n )
 }
 
 
+
 void integerToString(char * list, int listSize, int number)
 {
     int i;
@@ -237,9 +238,10 @@ void integerToString(char * list, int listSize, int number)
         number = number /10;
         temp+= 0x30;
         if( i < listSize) // just to be safe
-            list[size - i-1] = temp;
+            list[size - i -1] = temp;
 
     }
+    list[size] = 0x00;
 }
    
 
@@ -299,7 +301,7 @@ void checkHighscore()
 //updating the chararray
     for (i = 0; i < 3; i++)
     {
-        num32asc(highscoreSTRINGS[i],highscore[i]);
+        integerToString(highscoreSTRINGS[i], sizeof(highscoreSTRINGS[i]),highscore[i]);
 
     }
 
@@ -317,8 +319,8 @@ void gameOver()
     
 
  //show score press a button to start again
-    char yourscore[16], finaltext[16] = "Score:  ";
-    num32asc(yourscore, score);
+    char yourscore[16], finaltext[16] = "Score:   ";
+    integerToString(yourscore, 16,  score);
     concatenateString(finaltext, yourscore);
     //strcat(text, yourscore);
 
