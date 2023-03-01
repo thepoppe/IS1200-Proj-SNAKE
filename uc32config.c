@@ -54,7 +54,7 @@ void user_isr(){
 */
 
 /*************************************
-copied part starts here
+    copied part starts here
 *************************************/
 static unsigned int g_seed;
 // Used to seed the generator.           
@@ -69,7 +69,7 @@ inline int fast_rand(void) {
 }
 /*************************************
 	copied part ends here
-	*************************************/
+*************************************/
 
 
 
@@ -92,7 +92,7 @@ int randomnumber(int minvalue, int maxvalue)
 
 
 
-// get button values 
+// get button values from  BTN 4,3,2
 int btnvalues()
 {
     return ((PORTD >> 5) & 0x7);

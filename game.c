@@ -166,13 +166,13 @@ void checkCollision()
         
 
     //checking collsion with outer borders, if true gameON = False
-    if ( snakeX[0] == 127)
+    if ( snakeX[0] > 127)
         gameON = 'F';
-    if ( snakeX[0] == 0)
+    if ( snakeX[0] < 0)
         gameON = 'F';
-    if ( snakeY[0] == 0 && snakeBit[0]== 1)
+    if ( snakeY[0] < 0)
         gameON = 'F';
-    if ( snakeY[0] == 3 && snakeBit[0]== 7)
+    if ( snakeY[0] > 3 )
         gameON = 'F';
 }
 

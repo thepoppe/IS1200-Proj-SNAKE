@@ -144,7 +144,7 @@ void printStrings(char* s0, char* s1, char* s2, char* s3 )
 
 
 
-// ***OBS Copied and renamed from lab 3, time4io "displayupdate()".
+// ***OBS Copied and renamed from lab 3, time4io "display_update()".
 //    Some changes made to the suit the code ***
 // oledUpdate sends the information in displayBuffer to the screen
 void oledUpdate() 
@@ -229,7 +229,7 @@ void GameBufferUpdate()
 	displayBuffer[appleY][appleX] |= (1<<appleB);
 
 
-	// adds the snake to the array
+	// adds the snakes coordinates to the displaybuffer
 	int i = bodyParts;
 	while(i >= 0)
 	{			
@@ -237,7 +237,7 @@ void GameBufferUpdate()
 		i--;
 /*		
 		//ex 3 bodyparts,  moving down		
-		head x[0]=10
+		head x[0]= 10
 		head y[0]= 1
 		head b[0]= 5
 		page = 1
@@ -256,10 +256,9 @@ void GameBufferUpdate()
 		displatbuffer[ 1 ][ 10 ] |= 0b00111000 ( 1<< 3)
 		  
 */		
-	
 	}
 
-
+	//updating the screen.
 	oledUpdate();
 
 
