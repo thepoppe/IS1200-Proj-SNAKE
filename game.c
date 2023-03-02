@@ -38,8 +38,8 @@ int score = 0;
 char direction = 'R'; // R for RIGHT osv
 char gameON = 'F'; //F for false, T for True 
 int timer2counter = 0; //global counter for timer2
-int levelspeed = 10;
-int levelBodyParts = 16;
+int gamespeed = 6; // less should give faster. //dificulty = medium on default
+
 int highscore[3*sizeof(int)];
 char highscoreSTRINGS[3][16];
 
@@ -143,14 +143,14 @@ void moveSnake()
 
 
 
-
+//chechcollision cjecks if the coordinates of the head crosses eatables, another bodypart or the borders
 void checkCollision()
 {
     //checking collision with apple, if true make new apple and increment bodyParts
     if ( (snakeX[0] == appleX) && (snakeY[0] == appleY) && (snakeBit[0] == appleB))
     {
         score++;
-        bodyParts += levelBodyParts;
+        bodyParts += 4;
         newApple();
 
     }
@@ -174,6 +174,7 @@ void checkCollision()
         gameON = 'F';
     if ( snakeY[0] > 3 )
         gameON = 'F';
+
 }
 
 
@@ -344,7 +345,7 @@ void startGame()
             IFSCLR(0) = (1<<8);
             timer2counter++;
         }
-        if (timer2counter ==  levelspeed) // 10 on default 100ms
+        if (timer2counter ==  gamespeed) // 10 on default 100ms
         {   
             timer2counter = 0;
             
@@ -378,7 +379,7 @@ void gameMeny()
 
     while(1)
     {   
-        printStrings("  * SNAKE *", "1 - Start game!", "2 - Difficulty", "3 - Highscores");
+        printStrings("  *  SNAKE  *  ", "1 - Start game!", "2 - Difficulty", "3 - Highscores");
 
         while(1)
         {
@@ -392,38 +393,29 @@ void gameMeny()
             }
 
 
-            //Level menu
+            //Highscore menu
             if (btnvalues() & ( 1 << 1))
             {
                 blackDisplay();
                 wait10ms(30);
-                printStrings("* LEVEL *","1 - Easy","2 - Medium","3 - Hard");
+                printStrings("  *  LEVEL  *  ","1 - Easy","2 - Medium","3 - Hard");
                 int choice = 0;
                 while(choice == 0)
                 {
                     choice = btnvalues();
                     wait10ms(10);
                 }
-                if( choice & (1<<7))
-                {
-                    levelspeed = 15;
-                    levelBodyParts = 4;
-                }
+                if( choice & (1<<2))
+                    gamespeed = 9;
                         
-                if( choice & (1<<6))
-                {
-                    levelspeed = 5;
-                    levelBodyParts = 8;
-                }
+                if( choice & (1<<1))
+                    gamespeed = 6;
 
-                if( choice & (1<<5))
-                {
-                    levelspeed = 0.5;
-                    levelBodyParts = 16;
-                }
+                if( choice & ( 1 ))
+                    gamespeed = 3;
 
             
-            break;
+                break;
             }
 
 
@@ -438,8 +430,8 @@ void gameMeny()
                 {
                     //wait
                 }
-               
-                break;
+                
+            break;
             }
             
         }

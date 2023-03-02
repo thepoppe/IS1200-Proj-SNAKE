@@ -27,7 +27,7 @@ void IO_init(void)
 
   
 
-    //timer 4 used for gamespeed. flag on pin 16
+    //timer 4 used to seed random. flag on pin 16
     T4CON = 0; //clear timer
     TMR4 = 0x0; // initial timer value =0
     PR4 = ((80000000/256) / 1000) ;// 1 ms = 0,001s => f=1000
@@ -76,7 +76,7 @@ inline int fast_rand(void) {
 //randomnumber returns a number between minvalue and maxvalue;
 int randomnumber(int minvalue, int maxvalue)
 {   
-    fast_srand(TMR4);
+    fast_srand(TMR4 * TMR2);
     int random;
     while ( 1 )
     {
@@ -93,6 +93,7 @@ int randomnumber(int minvalue, int maxvalue)
 
 
 // get button values from  BTN 4,3,2
+// returns the values on 4,2,1 / 0x7
 int btnvalues()
 {
     return ((PORTD >> 5) & 0x7);

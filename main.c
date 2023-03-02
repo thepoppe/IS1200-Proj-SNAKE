@@ -21,7 +21,7 @@ int main(void) {
 	*/
 
 	/*************************************
-	copied part starts here
+	copied part from lab 3, time4io, mipslabmain starts here
 	*************************************/
 	SYSKEY = 0xAA996655;  /* Unlock OSCCON, step 1 */
 	SYSKEY = 0x556699AA;  /* Unlock OSCCON, step 2 */
